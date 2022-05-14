@@ -11,16 +11,16 @@ env = Environment(
 )
 
 template = env.get_template('template.html')
-event1 = 1920
-event2 = datetime.datetime.now().year
-delta = event2 - event1
+foundation_year = 1920
+current_year = datetime.datetime.now().year
+past_years = current_year - foundation_year
 
-df_wines = pandas.read_excel('wine3.xlsx', sheet_name='Лист1', na_values='None', keep_default_na=False)
-dict_wine = df_wines.to_dict(orient='records')
-data_wine = defaultdict(list)
-for k in dict_wine:
-    data_wine[k["Категория"]].append(k)
-rendered_page = template.render(year=delta, data_wine=data_wine)
+df_wines = pandas.read_excel('wine.xlsx', sheet_name='Лист1', na_values='None', keep_default_na=False)
+wines = df_wines.to_dict(orient='records')
+categorized_wines = defaultdict(list)
+for wine in wines:
+    categorized_wines[wine["Категория"]].append(wine)
+rendered_page = template.render(year=past_years, data_wine=categorized_wines)
 
 
 with open('index.html', 'w', encoding="utf8") as file:

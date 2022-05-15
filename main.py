@@ -3,6 +3,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import datetime
 import pandas
+import argparse
 
 
 def load_template(template_path):
@@ -36,10 +37,15 @@ def render_page(template, past_years, categorized_wines):
 
 
 if __name__ == "__main__":
-    html_template = load_template('template.html')
+    parser = argparse.ArgumentParser(
+        description='Запуск вэб-страницы магазина вин с данным из файла'
+    )
+    parser.add_argument('-w', '--wine_path', help='Путь к файлу с каталогом вин', default='wine.xlsx')
+    parser.add_argument('-t', '--template_path', help='Путь к html-шаблону', default='template.html')
+    args = parser.parse_args()
+    html_template = load_template(args.template_path)
     years_count = calc_years_count()
-    file_path = input("Укажите путь к файлу: ")
-    wines_grouped_by_categories = get_wines_data(file_path)
+    wines_grouped_by_categories = get_wines_data(args.wine_path)
     render_page(html_template, years_count, wines_grouped_by_categories)
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()

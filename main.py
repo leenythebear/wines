@@ -1,9 +1,10 @@
+import argparse
+import datetime
 from collections import defaultdict
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from jinja2 import Environment, FileSystemLoader, select_autoescape
-import datetime
+
 import pandas
-import argparse
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
 def load_template(template_path):

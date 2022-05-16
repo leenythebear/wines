@@ -21,7 +21,7 @@ def calc_years_count(foundation_year=1920):
     return past_years
 
 
-def get_wines_data(file_path):
+def get_categorized_wines(file_path):
     df_wines = pandas.read_excel(file_path, sheet_name='Лист1', na_values='None', keep_default_na=False)
     wines = df_wines.to_dict(orient='records')
     categorized_wines = defaultdict(list)
@@ -31,7 +31,7 @@ def get_wines_data(file_path):
 
 
 def render_page(template, past_years, categorized_wines):
-    rendered_page = template.render(year=past_years, data_wine=categorized_wines)
+    rendered_page = template.render(year=past_years, categorized_wines=categorized_wines)
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     html_template = load_template(args.template_path)
     years_count = calc_years_count()
-    wines_grouped_by_categories = get_wines_data(args.wine_path)
+    wines_grouped_by_categories = get_categorized_wines(args.wine_path)
     render_page(html_template, years_count, wines_grouped_by_categories)
     server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
     server.serve_forever()
